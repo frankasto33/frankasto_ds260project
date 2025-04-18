@@ -740,8 +740,8 @@ huc10_gdf = huc10_gdf.to_crs(gmd_gdf.crs)
 huc10_with_gmd = gpd.sjoin(huc10_gdf, gmd_gdf, how="inner", predicate="intersects")
 
 # Step 4: Clean HUC codes for merging with WIMAS
-wimas_df["HUC"] = wimas_df["HUC"].astype(str)
-huc10_with_gmd["HUC_10"] = huc10_with_gmd["HUC_10"].astype(str)
+#wimas_df["HUC"] = wimas_df["HUC"].astype(str)
+#huc10_with_gmd["HUC_10"] = huc10_with_gmd["HUC_10"].astype(str)
 
 # Step 5: Merge WIMAS water use data with HUC10 + GMD regions
 merged_huc10 = huc10_with_gmd.merge(wimas_df, left_on="HUC_10", right_on="HUC")
