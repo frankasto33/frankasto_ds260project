@@ -18,9 +18,19 @@
 import pandas as pd
 
 #loading the 3 files
-df_main = pd.read_csv("GMD_Water_Use_groundwaterbywell_county_cousub_sec.csv")
-df_wizard = pd.read_csv("GMD Water Use_WIZARD Data.csv")
-df_wimas = pd.read_csv("GMD Water Use_WIMASusebyHUC10.csv")
+
+url1 = "https://drive.google.com/uc?export=download&id=1wqUxTFOtv2C2LlxiqJN_49kGDdKwXUNI"
+df_main = pd.read_csv(url1)
+
+url2 = "https://drive.google.com/uc?export=download&id=1oS3c3qzMRgpYA05NkB7LUULLLrsZsVxM"
+df_wizard = pd.read_csv(url2)
+
+url3 = "https://drive.google.com/uc?export=download&id=1i9ODCyZ32tLprxeSSbSjcwjVXSjyVYGH"
+df_wimas = pd.read_csv(url3)
+
+#df_main = pd.read_csv("GMD_Water_Use_groundwaterbywell_county_cousub_sec.csv")
+#df_wizard = pd.read_csv("GMD Water Use_WIZARD Data.csv")
+#df_wimas = pd.read_csv("GMD Water Use_WIMASusebyHUC10.csv")
 
 #size of rows and columns
 print("Total Rows and Columns in GMD Water file:")
@@ -696,8 +706,15 @@ from shapely.geometry import Point
 # Step 1: Load data
 wimas_df = df_wimas_cols.copy()
 wizard_df = df_wizard_cols.copy()
-huc10_gdf = gpd.read_file("HUC_10_Boundaries.geojson")
-gmd_gdf = gpd.read_file("Groundwater_Management_Districts_(GMD).geojson")
+
+url4 = "https://drive.google.com/uc?export=download&id=1Y2rx3Cq-pidPfaDZ3hAvC2qWJCimqkGk"
+huc10_gdf = pd.read_csv(url4)
+
+url5 = "https://drive.google.com/uc?export=download&id=1EqOiQ-7fjVQiZci3XZ5ej1S5-0dpOTc9"
+gmd_gdf = pd.read_csv(url5)
+
+#huc10_gdf = gpd.read_file("HUC_10_Boundaries.geojson")
+#gmd_gdf = gpd.read_file("Groundwater_Management_Districts_(GMD).geojson")
 
 # Step 2: Ensure CRS matches between HUC10 and GMD
 huc10_gdf = huc10_gdf.to_crs(gmd_gdf.crs)
