@@ -5,4 +5,5 @@ gdown
 plotly
 matplotlib
 shapely
+ipywidgets
 
