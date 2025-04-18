@@ -8,29 +8,54 @@
 ## DS 260
 ## Project
 ## Water use in Groundwater Management Districts (1, 3, and 4)
-
+import os, warnings, zipfile
+import gdown
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
+import ipywidgets as widgets
+from shapely.geometry import Point
+from IPython.display import display
+warnings.filterwarnings("ignore")
 
 # In[577]:
 
+# ---------------------------------------------------------------------------
+# Google‑Drive helper – download only once per session
+# ---------------------------------------------------------------------------
+DRIVE_IDS = {
+    "main"  : "1wqUxTFOtv2C2LlxiqJN_49kGDdKwXUNI",
+    "wizard": "1oS3c3qzMRgpYA05NkB7LUULLLrsZsVxM",
+    "wimas" : "1i9ODCyZ32tLprxeSSbSjcwjVXSjyVYGH",
+    "huc10" : "1Y2rx3Cq-pidPfaDZ3hAvC2qWJCimqkGk",
+    "gmd"   : "1EqOiQ-7fjVQiZci3XZ5ej1S5-0dpOTc9",
+}
 
-# Loading 3 csv files
+def fetch(file_key: str, dest: str) -> str:
+    """Download Google‑Drive file if not present and return local path."""
+    if not os.path.exists(dest):
+        url = f"https://drive.google.com/uc?id={DRIVE_IDS[file_key]}"
+        gdown.download(url, dest, quiet=False)
+    return dest
 
-import pandas as pd
+# ---------------------------------------------------------------------------
+# 1) Load the three water‑use CSVs
+# ---------------------------------------------------------------------------
+main_csv   = fetch("main",   "GMD_water_use.csv")
+wizard_csv = fetch("wizard", "wizard.csv")
+wimas_csv  = fetch("wimas",  "wimas.csv")
 
-#loading the 3 files
+print("Loading large CSVs …")
+df_main   = pd.read_csv(main_csv)
+df_wizard = pd.read_csv(wizard_csv)
+df_wimas  = pd.read_csv(wimas_csv)
 
-url1 = "https://drive.google.com/uc?export=download&id=1wqUxTFOtv2C2LlxiqJN_49kGDdKwXUNI"
-df_main = pd.read_csv(url1)
-
-url2 = "https://drive.google.com/uc?export=download&id=1oS3c3qzMRgpYA05NkB7LUULLLrsZsVxM"
-df_wizard = pd.read_csv(url2)
-
-url3 = "https://drive.google.com/uc?export=download&id=1i9ODCyZ32tLprxeSSbSjcwjVXSjyVYGH"
-df_wimas = pd.read_csv(url3)
-
-#df_main = pd.read_csv("GMD_Water_Use_groundwaterbywell_county_cousub_sec.csv")
-#df_wizard = pd.read_csv("GMD Water Use_WIZARD Data.csv")
-#df_wimas = pd.read_csv("GMD Water Use_WIMASusebyHUC10.csv")
+print("Loaded shapes:")
+print("• df_main  :",   df_main.shape)
+print("• df_wizard:", df_wizard.shape)
+print("• df_wimas :", df_wimas.shape)
 
 #size of rows and columns
 print("Total Rows and Columns in GMD Water file:")
@@ -703,18 +728,10 @@ import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Point
 
-# Step 1: Load data
-wimas_df = df_wimas_cols.copy()
-wizard_df = df_wizard_cols.copy()
-
-url4 = "https://drive.google.com/uc?export=download&id=1Y2rx3Cq-pidPfaDZ3hAvC2qWJCimqkGk"
-huc10_gdf = pd.read_csv(url4)
-
-url5 = "https://drive.google.com/uc?export=download&id=1EqOiQ-7fjVQiZci3XZ5ej1S5-0dpOTc9"
-gmd_gdf = pd.read_csv(url5)
-
-#huc10_gdf = gpd.read_file("HUC_10_Boundaries.geojson")
-#gmd_gdf = gpd.read_file("Groundwater_Management_Districts_(GMD).geojson")
+huc10_geo  = fetch("huc10","HUC10.geojson")
+gmd_geo    = fetch("gmd",  "GMD.geojson")
+huc10_gdf  = gpd.read_file(huc10_geo)
+gmd_gdf    = gpd.read_file(gmd_geo)
 
 # Step 2: Ensure CRS matches between HUC10 and GMD
 huc10_gdf = huc10_gdf.to_crs(gmd_gdf.crs)
